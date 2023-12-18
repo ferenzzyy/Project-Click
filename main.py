@@ -23,44 +23,34 @@ increment = 7
 points = 0
 level = 1
 max_amount = 500
+timer = 0
 
 target_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 target_pos1 = pygame.Vector2(screen.get_width() / 4, screen.get_height() / 4)
 
 
-# Fucntion for Showing FPS
-def update_fps():
-    fps = str(int(clock.get_fps()))
-    fps_text = font.render("FPS: " + fps, 1, pygame.Color("coral"))
-    return fps_text
+# Displaying Text
+def show_text(text, location):
+    display_text = text
+    text_location = pygame.Vector2(location)
+    display_text = font.render(text, True, pygame.Color("coral"))
+    # return display_text
+    screen.blit(display_text, (text_location.x,text_location.y))
 
 
-def show_points():
-    # points_ = "Points: " + str(points)
-    points_text = font.render(f'Points: {points}', 1, pygame.Color("coral"))
-    return points_text
-
-
-def show_level():
-    level_text = font.render(f'Level: {level}', 1, pygame.Color("coral"))
-    return level_text
 
 #Texting typing effect for text boxes
-def text_scroll(the_string):
-    display_string = the_string
-    snip = font.render('',1,pygame.Color("coral"))
-    counter = 0
-    speed = 3
-    done = False
+def scroll_text(text, location, timer, speed): # THe time is
+    display_text = text
+    text_location = pygame.Vector2(location)
+    text_speed = 0
+    timing = 0
+    timing = timer
+    text_speed += M.floor(timing * speed)
 
-    if counter < speed * len(display_string):
-        counter +=1
+    show_text(display_text[0:text_speed], (text_location.x, text_location.y))
 
-    elif counter >= speed*len(display_string):
-        done = True
-    snip = font.render(display_string[0:counter//speed],1, pygame.Color("coral"))
-    # screen.blit(snip,(100,100))
-    return snip
+
 def target(surface, position, radius, colour, mouse_position, mouse_click):
     t_surface = surface
     t_position = position
@@ -195,14 +185,20 @@ def spawing_targets():
 spawn_point_generation(increment)
 # Main loop
 while running:
+    dt = clock.tick(60) / 1000
+    timer += dt # limits FPS to 60
     event_system()
-    message = ""
     mouse_pos = pygame.mouse.get_pos()
     screen.fill("black")
 
     # RENDER YOUR GAME HERE
     # spawning_targets()
     # This is used for the target spawning
+    show_text(f'Level: {level}', (640, 0))
+    show_text(f'Points: {points}', (1200, 0))
+    show_text(f'FPS: {str(int(clock.get_fps()))}', (10, 0))
+    scroll_text("YOU'RE DONE ENOUGH!", (100, 100), timer, 20)
+
 
     test_space = pygame.Rect(30, 30, 1220, 660)
     pygame.draw.rect(screen, "red", test_space, 1)
@@ -215,8 +211,7 @@ while running:
         level += 1
         if level >= 100:
             level = 100
-            # message = "YOU'RE DONE ENOUGH!"
-            screen.blit(text_scroll("YOU'RE DONE ENOUGH!"), (100, 100))
+            scroll_text("YOU'RE DONE ENOUGH!", (100, 100), timer, 20)
             next_level = False
         next_level = False
         # increment += 3
@@ -224,12 +219,10 @@ while running:
         spawing_targets()
         print(increment)
 
-    screen.blit(update_fps(), (10, 0))  # Shows FPS
-    screen.blit(show_points(), (1200, 0))  # Shows Points
-    screen.blit(show_level(), (640, 0))  # Shows Levels
+
 
 
     # flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(60)  # limits FPS to 60
+
