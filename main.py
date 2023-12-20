@@ -12,10 +12,6 @@ mouse_click = False
 hit = False
 font = pygame.font.SysFont("Arial", 18)
 
-# spawn_timer = 3
-# timer = pygame.USEREVENT + 1
-# pygame.time.set_timer(timer, 1000)
-
 
 next_level = False
 targets = 0
@@ -25,8 +21,6 @@ level = 1
 max_amount = 500
 timer = 0
 
-target_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-target_pos1 = pygame.Vector2(screen.get_width() / 4, screen.get_height() / 4)
 
 
 # Displaying Text
@@ -39,15 +33,13 @@ def show_text(text, location):
 
 
 
-#Texting typing effect for text boxes
-def scroll_text(text, location, timer, speed): # THe time is
+# Texting typing effect for text boxes
+def scroll_text(text, location, timer, speed):
     display_text = text
     text_location = pygame.Vector2(location)
     text_speed = 0
-    timing = 0
-    timing = timer
-    text_speed += M.floor(timing * speed)
-
+    timeing = timer
+    text_speed += M.floor(timeing * speed)
     show_text(display_text[0:text_speed], (text_location.x, text_location.y))
 
 
@@ -120,15 +112,6 @@ def event_system():
                 next_level = True
                 print("space pressed!")
 
-        # if event.type == timer: # checks for timer event 
-        #     if spawn_timer > 0: 
-        #         spawn_timer -= 1 # Decrements the timer so its counting down 
-        #     if spawn_timer <= 0:
-        #         spawning_targets()
-        #         spawn_timer = 4 # resets timer
-        #     # else:
-        #     #     pygame.time.set_timer(timer, 0) #turn off timer event 
-
 
 def level_complete_check():
     global hit
@@ -156,22 +139,6 @@ def spawn_point_generation(max_amount):
     while i < amount_of_targets:
         random_points()
         positions.append(random_points())
-
-        # This happens for the first item of the positions list
-
-        # On the 2nd item (that being the positions[1])
-        # Take the distance between this position and the position before 
-        # If that distance is below 60 
-        # Generate another spawn point 
-        # Repeat for the new one 
-
-        # if i >= 1:
-        #     a = positions[i] - ([i-1])
-        #     b = positions[i] - (positions[i-1])
-        #     distance = M.sqrt((a*a) + (b*b))
-
-        #     if distance <= 60: # Checks if the distance between centres is smaller or equal to 60 
-
         i += 1
         check_spawn_points()
 
@@ -179,25 +146,25 @@ def spawn_point_generation(max_amount):
 def spawing_targets():
     for x in range(len(positions)):
         target(screen, positions[x], 30, "red", mouse_pos, mouse_click)
-        # print(positions)
 
 
 spawn_point_generation(increment)
 # Main loop
 while running:
+    # limits FPS to 60
     dt = clock.tick(60) / 1000
-    timer += dt # limits FPS to 60
+    timer += dt
     event_system()
     mouse_pos = pygame.mouse.get_pos()
     screen.fill("black")
 
     # RENDER YOUR GAME HERE
-    # spawning_targets()
+
     # This is used for the target spawning
     show_text(f'Level: {level}', (640, 0))
     show_text(f'Points: {points}', (1200, 0))
     show_text(f'FPS: {str(int(clock.get_fps()))}', (10, 0))
-    scroll_text("YOU'RE DONE ENOUGH!", (100, 100), timer, 20)
+    # scroll_text("YOU'RE DONE ENOUGH!", (100, 100), timer, 20) # Test for scrolling text
 
 
     test_space = pygame.Rect(30, 30, 1220, 660)
@@ -214,7 +181,6 @@ while running:
             scroll_text("YOU'RE DONE ENOUGH!", (100, 100), timer, 20)
             next_level = False
         next_level = False
-        # increment += 3
         spawn_point_generation(increment)
         spawing_targets()
         print(increment)
