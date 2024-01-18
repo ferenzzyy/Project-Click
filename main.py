@@ -12,6 +12,8 @@ mouse_click = False
 hit = False
 font = pygame.font.SysFont("Arial", 18)
 
+next_dialouge = False
+
 
 next_level = False
 targets = 0
@@ -37,10 +39,14 @@ def show_text(text, location):
 def scroll_text(text, location, timer, speed):
     display_text = text
     text_location = pygame.Vector2(location)
-    text_speed = 0
+    counter = 0
     timeing = timer
-    text_speed += M.floor(timeing * speed)
-    show_text(display_text[0:text_speed], (text_location.x, text_location.y))
+    counter += M.floor(timeing * speed)
+    if next_dialouge == True:
+        # if counter >= len(display_text):
+            counter = 0
+    show_text(display_text[0:counter], (text_location.x, text_location.y))
+
 
 
 def target(surface, position, radius, colour, mouse_position, mouse_click):
@@ -109,9 +115,12 @@ def event_system():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 global next_level
-                next_level = True
+                next_level = True#
                 print("space pressed!")
-
+            if event.key == pygame.K_c:
+                global next_dialouge
+                next_dialouge = True
+                print("pressed C")
 
 def level_complete_check():
     global hit
@@ -164,7 +173,7 @@ while running:
     show_text(f'Level: {level}', (640, 0))
     show_text(f'Points: {points}', (1200, 0))
     show_text(f'FPS: {str(int(clock.get_fps()))}', (10, 0))
-    # scroll_text("YOU'RE DONE ENOUGH!", (100, 100), timer, 20) # Test for scrolling text
+    scroll_text("YOU'RE DONE ENOUGH! SENDING MESSAGE THE LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG WAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY", (100, 100), timer, 20) # Test for scrolling text
 
 
     test_space = pygame.Rect(30, 30, 1220, 660)
