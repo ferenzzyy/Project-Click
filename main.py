@@ -14,7 +14,6 @@ font = pygame.font.SysFont("Arial", 18)
 
 next_dialouge = False
 
-
 next_level = False
 targets = 0
 increment = 7
@@ -25,14 +24,14 @@ timer = 0
 
 
 
+
 # Displaying Text
 def show_text(text, location):
     display_text = text
     text_location = pygame.Vector2(location)
     display_text = font.render(text, True, pygame.Color("coral"))
     # return display_text
-    screen.blit(display_text, (text_location.x,text_location.y))
-
+    screen.blit(display_text, (text_location.x, text_location.y))
 
 
 # Texting typing effect for text boxes
@@ -41,12 +40,21 @@ def scroll_text(text, location, timer, speed):
     text_location = pygame.Vector2(location)
     counter = 0
     timeing = timer
-    counter += M.floor(timeing * speed)
-    if next_dialouge == True:
-        # if counter >= len(display_text):
-            counter = 0
+    counter = M.floor(timeing * speed)
+
+    if counter >= len(display_text):
+        counter = 0
+
+
     show_text(display_text[0:counter], (text_location.x, text_location.y))
 
+
+# def dialouge_scroll(dialouge, location, timer ):
+#     current_index = 0
+#     if next_dialouge == True:
+#         current_index += 1
+#     current_dialouge = dialouge[current_index]
+#     scroll_text(current_dialouge, location, timer, 10)
 
 
 def target(surface, position, radius, colour, mouse_position, mouse_click):
@@ -115,12 +123,14 @@ def event_system():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 global next_level
-                next_level = True#
+                next_level = True  #
                 print("space pressed!")
             if event.key == pygame.K_c:
-                global next_dialouge
-                next_dialouge = True
+                # global next_dialouge
+                # next_dialouge = True
                 print("pressed C")
+
+
 
 def level_complete_check():
     global hit
@@ -167,14 +177,17 @@ while running:
     mouse_pos = pygame.mouse.get_pos()
     screen.fill("black")
 
+    # dialouge = ["Message 1 woaaaaaaaaaaaah", "Message 2 nuh uh", "OH BROTHER THIS GUY STINK", "WUDAHEEEEEEEEEAAAAAL"]
+
     # RENDER YOUR GAME HERE
 
     # This is used for the target spawning
     show_text(f'Level: {level}', (640, 0))
     show_text(f'Points: {points}', (1200, 0))
     show_text(f'FPS: {str(int(clock.get_fps()))}', (10, 0))
-    scroll_text("YOU'RE DONE ENOUGH! SENDING MESSAGE THE LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG WAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY", (100, 100), timer, 20) # Test for scrolling text
-
+    # scroll_text("YOU'RE DONE ENOUGH! SENDING MESSAGE THE LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG WAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY", (100, 100), timer, 20) # Test for scrolling text
+    # dialouge_scroll(dialouge, (100,100), timer)
+    scroll_text("HELlO :33333333333", (100, 100), timer, 10)
 
     test_space = pygame.Rect(30, 30, 1220, 660)
     pygame.draw.rect(screen, "red", test_space, 1)
@@ -194,10 +207,5 @@ while running:
         spawing_targets()
         print(increment)
 
-
-
-
     # flip() the display to put your work on screen
     pygame.display.flip()
-
-

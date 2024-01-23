@@ -11,13 +11,13 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 timer = 0
-# counter = 0
-# Text
-# text = "Yeah"
-# done = False
 
-
-
+counter = 0
+text = "Message 1 : this is the first message"
+messages = ["Message1", "Message 2", "message 3"]
+done = False
+active_message = 0
+current_message = messages[active_message]
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
@@ -27,60 +27,46 @@ def show_text(text, location):
     text_location = pygame.Vector2(location)
     display_text = font.render(text, True, pygame.Color("coral"))
     # return display_text
-    screen.blit(display_text, (text_location.x,text_location.y))
+    screen.blit(display_text, (text_location.x, text_location.y))
 
 
-# def scroll_text(text, location, timer, speed): # THe time is
-#     display_text = text
-#     text_location = pygame.Vector2(location)
-#     text_speed = 0
-#     timing = timer
-#     text_speed += math.floor(timing * speed)
-#     show_text(display_text[0:text_speed], (text_location.x, text_location.y))
-#     global done
-#     done = True
-
-
-def dialouge_box(dialouge, location, text_speed):
-    message = dialouge
-    snip = font.render('', True, 'coral')
+def scroll_text(text, location, timer, speed):  # THe time is
+    display_text = text
+    text_location = pygame.Vector2(location)
     counter = 0
-    speed = text_speed
-    done = False
-
-    if counter < speed * len(message):
-        counter += 1
-    elif counter >= speed * len(message):
+    timing = timer
+    counter += math.floor(timing * speed)
+    if counter >= len(display_text):
+        # counter = 0
+        global done
         done = True
 
-    snip = font.render(message[0:counter//speed], True, 'coral')
+    show_text(display_text[0:counter], (text_location.x, text_location.y))
 
-    screen.blit(snip, location)
 
 while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
     text = "bruh"
     timer += dt
-    dialouge_text = ["bruh", "bruh2"]
 
-    # scroll_text("THIS IS INSANE!", (0, 0), timer, 15)
-    # scroll_text("THIS IS INSANE!", (0, 10), timer, 15)
+
+    scroll_text("THIS IS INSANE!", (0, 0), timer, 15)
+    scroll_text("THIS IS INSANE!", (0, 10), timer, 15)
 
     show_text(str(int(clock.get_fps())), (1100, 15))
     show_text(f'Timer: {timer}', (1100, 0))
 
-    # dialouge_box(dialouge_text, (1000, 100), timer, 15)
-    dialouge_box("yeaaaaaaa", (1000, 100), 5)
+    scroll_text(current_message, (100,10), timer, 10)
+
+
+
 
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-
-
 
     pygame.draw.circle(screen, "red", player_pos, 40)
 
@@ -93,9 +79,11 @@ while running:
         player_pos.x -= 300 * dt
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
-    # if keys[pygame.K_c] and done:
-
-
+    # if keys[pygame.K_c] and done and active_message < len(messages):
+    #     counter = 0
+    #     done = False
+    #     active_message += 1
+    #     current_message = messages[active_message]
 
     # flip() the display to put your work on screen
     pygame.display.flip()
