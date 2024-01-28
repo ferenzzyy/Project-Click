@@ -50,13 +50,15 @@ class ScrollText:
             self.done = True
 
         t_keys = pygame.key.get_pressed()
-        if t_keys[pygame.K_RETURN] and self.done and ScrollText.active_text < len(self.display_txts) - 1 :
+        if t_keys[pygame.K_RETURN] and self.done and ScrollText.active_text < len(self.display_txts) - 1:
             ScrollText.counter = 0
             ScrollText.active_text += 1
             self.done = False
 
         snip_ = font.render(self.current_msg[0:self.counter_rounded], True, "white")
         screen.blit(snip_, (self.location.x, self.location.y))
+
+
 
 
 def scroll_text(text, location, speed_):
@@ -85,14 +87,18 @@ def render():
     show_text(f'Timeer: {str(int(timer))}', (700, 0))
 
     scroll_text(messages[active_message], (500, 500), 20)
+    # scroll_text(["Text", "text 2"][active_message], (500, 500), 20)
     text1.update()
+    # text2.update()
+    # text1.single_text()
 
     pygame.display.flip()
 
 
 while running:
     # fill the screen with a color to wipe away anything from last frame
-    text1 = ScrollText(messages, 50, (500, 310))
+    text1 = ScrollText(["Text"], 50, (500, 310))
+    # text2 = ScrollText(["Text", "Text 2"], 50, (500, 310))
     timer += dt
 
     # poll for events
