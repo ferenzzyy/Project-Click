@@ -1,6 +1,5 @@
 # Example file showing a circle moving on screen
 import math
-
 import pygame
 
 # pygame setup
