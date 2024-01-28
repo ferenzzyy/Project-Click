@@ -32,21 +32,30 @@ def show_text(text, location):
 
 class ScrollText:
     counter = 0
+    active_text = 0
 
     def __init__(self, text_, speed_, location_):
-        self.display_t = text_
+        self.display_txts = text_
         self.t_speed = speed_
         self.location = pygame.Vector2(location_)
         self.counter_rounded = round(ScrollText.counter)
         self.done = False
+        # self.active_text = 0
+        self.current_msg = self.display_txts[self.active_text]
 
     def update(self):
-        if self.counter < len(self.display_t):
+        if self.counter < len(self.current_msg):
             ScrollText.counter += (dt * self.t_speed)
-        elif self.counter >= len(self.display_t):
+        elif self.counter >= len(self.current_msg):
             self.done = True
 
-        snip_ = font.render(self.display_t[0:self.counter_rounded], True, "white")
+        t_keys = pygame.key.get_pressed()
+        if t_keys[pygame.K_RETURN] and self.done and ScrollText.active_text < len(self.display_txts) - 1 :
+            ScrollText.counter = 0
+            ScrollText.active_text += 1
+            self.done = False
+
+        snip_ = font.render(self.current_msg[0:self.counter_rounded], True, "white")
         screen.blit(snip_, (self.location.x, self.location.y))
 
 
@@ -83,7 +92,7 @@ def render():
 
 while running:
     # fill the screen with a color to wipe away anything from last frame
-    text1 = ScrollText("Check this sick message", 50, (500, 310))
+    text1 = ScrollText(messages, 50, (500, 310))
     timer += dt
 
     # poll for events
