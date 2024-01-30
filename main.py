@@ -7,6 +7,8 @@ import pygame
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
+img = pygame. image. load('c75.jpg')
+pygame. display. set_icon(img)
 clock = pygame.time.Clock()
 dt = 0
 running = True
@@ -171,6 +173,7 @@ class UIBar:
         if self.current_timer >= self.total_timer:
             self.current_timer = self.total_timer
             UIBar.ratio = 1
+            print("Done")
         pygame.draw.rect(screen, self.colour, self.bar_rect, self.bar_thickness)
         pygame.draw.rect(screen, self.fill_colour, self.bar_fill_rect)
         show_text(self.name, (self.position.x,self.position.y - 20))
@@ -231,7 +234,7 @@ while running:
     test_text1 = ScrollText(["MESSAGE", "MESSAGE 2"], 15, (10, 300))
     test_text2 = ScrollText(["MESSAGE", "MESSAGE 2"], 15, (10, 400))
 
-    test_bar = UIBar("UI Bar TEST", 100, 500, 400, 10, 20, "blue", "purple", 2)
+    test_bar = UIBar("UI Bar TEST", 10, 50, 400, 10, 20, "blue", "purple", 2)
 
     # print(test_text2.counter)
     timer += dt
