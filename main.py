@@ -153,26 +153,27 @@ def spawning_targets():
 
 class UIBar:
     ratio = 0
-    def __init__(self, x, y, width, height, timer_, colour, fill_colour):
+    def __init__(self, name, x, y, width, height, timer_, colour, fill_colour, bar_thickness):
+        self.name = name
         self.position = pygame.Vector2(x, y)
         self.size = pygame.Vector2(width, height)
         self.total_timer = timer_
         self.current_timer = timer
+        self.bar_thickness = bar_thickness
         # self.ratio = self.current_timer / self.total_timer
         self.colour = colour
         self.fill_colour = fill_colour
-        self.bar_rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
-        self.bar_fill_rect = pygame.Rect(self.position.x, self.position.y, self.size.x * UIBar.ratio, self.size.y)
+        self.bar_rect = pygame.Rect(self.position.x, self.position.y, self.size.x + self.bar_thickness, self.size.y + self.bar_thickness)
+        self.bar_fill_rect = pygame.Rect(self.position.x + self.bar_thickness, self.position.y + self.bar_thickness, (self.size.x * UIBar.ratio) - self.bar_thickness, self.size.y - self.bar_thickness)
 
     def draw(self):
         UIBar.ratio = self.current_timer / self.total_timer
         if self.current_timer >= self.total_timer:
             self.current_timer = self.total_timer
             UIBar.ratio = 1
-            # print(self.current_timer)
-            # print(self.ratio)
-        pygame.draw.rect(screen, self.colour, self.bar_rect)
+        pygame.draw.rect(screen, self.colour, self.bar_rect, self.bar_thickness)
         pygame.draw.rect(screen, self.fill_colour, self.bar_fill_rect)
+        show_text(self.name, (self.position.x,self.position.y - 20))
 
 def render():
     screen.fill("black")
@@ -230,7 +231,7 @@ while running:
     test_text1 = ScrollText(["MESSAGE", "MESSAGE 2"], 15, (10, 300))
     test_text2 = ScrollText(["MESSAGE", "MESSAGE 2"], 15, (10, 400))
 
-    test_bar = UIBar(100, 500, 400, 100, 20, "blue", "purple")
+    test_bar = UIBar("UI Bar TEST", 100, 500, 400, 10, 20, "blue", "purple", 2)
 
     # print(test_text2.counter)
     timer += dt
