@@ -152,18 +152,25 @@ def spawning_targets():
         target(screen, positions[x], 30, "red", mouse_pos, mouse_click)
 
 class UIBar:
+    ratio = 0
     def __init__(self, x, y, width, height, timer_, colour, fill_colour):
         self.position = pygame.Vector2(x, y)
         self.size = pygame.Vector2(width, height)
         self.total_timer = timer_
         self.current_timer = timer
-        self.ratio = self.current_timer / self.total_timer
+        # self.ratio = self.current_timer / self.total_timer
         self.colour = colour
         self.fill_colour = fill_colour
         self.bar_rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
-        self.bar_fill_rect = pygame.Rect(self.position.x, self.position.y, self.size.x * self.ratio, self.size.y)
+        self.bar_fill_rect = pygame.Rect(self.position.x, self.position.y, self.size.x * UIBar.ratio, self.size.y)
 
     def draw(self):
+        UIBar.ratio = self.current_timer / self.total_timer
+        if self.current_timer >= self.total_timer:
+            self.current_timer = self.total_timer
+            UIBar.ratio = 1
+            # print(self.current_timer)
+            # print(self.ratio)
         pygame.draw.rect(screen, self.colour, self.bar_rect)
         pygame.draw.rect(screen, self.fill_colour, self.bar_fill_rect)
 
@@ -225,7 +232,7 @@ while running:
 
     test_bar = UIBar(100, 500, 400, 100, 20, "blue", "purple")
 
-    print(test_text2.counter)
+    # print(test_text2.counter)
     timer += dt
 
     # RENDER YOUR GAME HERE
