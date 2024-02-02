@@ -4,17 +4,22 @@ import random as R
 
 import pygame
 
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 # img = pygame. image. load('c75.jpg')
 # pygame. display. set_icon(img)
+# img = pygame.transform.scale()
 clock = pygame.time.Clock()
 dt = 0
 running = True
 mouse_click = False
 hit = False
 font = pygame.font.SysFont("Arial", 18)
+
+mouse_pos = 0
+pygame.mouse.set_visible(False)
 
 next_dialogue = False
 
@@ -155,12 +160,12 @@ def spawning_targets():
 
 class UIBar:
     ratio = 0
-    def __init__(self, name, x, y, width, height, timer_, colour, fill_colour, bar_thickness):
+    def __init__(self, name, x, y, width, height, fill_, cfill, colour, fill_colour, bar_thickness):
         self.name = name
         self.position = pygame.Vector2(x, y)
         self.size = pygame.Vector2(width, height)
-        self.total_timer = timer_
-        self.current_timer = timer
+        self.total_fill = fill_
+        self.current_fill = cfill
         self.bar_thickness = bar_thickness
         # self.ratio = self.current_timer / self.total_timer
         self.colour = colour
@@ -169,9 +174,9 @@ class UIBar:
         self.bar_fill_rect = pygame.Rect(self.position.x + self.bar_thickness, self.position.y + self.bar_thickness, (self.size.x * UIBar.ratio) - self.bar_thickness, self.size.y - self.bar_thickness)
 
     def draw(self):
-        UIBar.ratio = self.current_timer / self.total_timer
-        if self.current_timer >= self.total_timer:
-            self.current_timer = self.total_timer
+        UIBar.ratio = self.current_fill / self.total_fill
+        if self.current_fill >= self.total_fill:
+            self.current_fill = self.total_fill
             UIBar.ratio = 1
             print("Done")
         pygame.draw.rect(screen, self.colour, self.bar_rect, self.bar_thickness)
@@ -193,6 +198,7 @@ def render():
     test_bar.draw()
     # test_text2.single_text()
     pygame.draw.rect(screen, "red", test_space, 1)
+    pygame.draw.rect(screen, "blue", cursor)
     pygame.display.flip()
 
 
@@ -228,18 +234,24 @@ spawn_point_generation(increment)
 while running:
     # event_system()
     mouse_pos = pygame.mouse.get_pos()
+    mouse_pos_ = pygame.Vector2(mouse_pos)
+
     # Single text
     # test_text = ScrollText(["Test text"], 50, (10, 200))
     # More than 1 Text
     test_text1 = ScrollText(["MESSAGE", "MESSAGE 2"], 15, (10, 300))
     test_text2 = ScrollText(["MESSAGE", "MESSAGE 2"], 15, (10, 400))
 
-    test_bar = UIBar("UI Bar TEST", 10, 50, 400, 10, 20, "blue", "purple", 2)
+    test_bar = UIBar("UI Bar TEST", 10, 50, 100, 10, 10, timer,"blue", "purple", 2)
+
+
 
     # print(test_text2.counter)
     timer += dt
 
-    # RENDER YOUR GAME HERE
+    # RENDER YOUR GAME HER E
+    cursor = pygame.Rect(mouse_pos_.x, mouse_pos_.y, 10, 10)
+    # screen.blit(cursor,mouse_pos)
     test_space = pygame.Rect(30, 30, 1220, 660)
     render()
 
