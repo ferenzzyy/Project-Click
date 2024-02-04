@@ -8,7 +8,8 @@ import pygame
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
-# img = pygame. image. load('c75.jpg')
+img = pygame. image. load('ndw.png')
+img_rect = img.get_rect()
 # pygame. display. set_icon(img)
 # img = pygame.transform.scale()
 clock = pygame.time.Clock()
@@ -68,6 +69,44 @@ class ScrollText:
 
         snip_ = font.render(self.message[0:self.counter_rounded], True, "white")
         screen.blit(snip_, (self.location.x, self.location.y))
+
+
+class UIBar:
+    ratio = 0
+    def __init__(self, name, x, y, width, height, fill_, cfill, colour, fill_colour, bar_thickness):
+        self.name = name
+        self.position = pygame.Vector2(x, y)
+        self.size = pygame.Vector2(width, height)
+        self.total_fill = fill_
+        self.current_fill = cfill
+        self.bar_thickness = bar_thickness
+        # self.ratio = self.current_timer / self.total_timer
+        self.colour = colour
+        self.fill_colour = fill_colour
+        self.bar_rect = pygame.Rect(self.position.x, self.position.y, self.size.x + self.bar_thickness, self.size.y + self.bar_thickness)
+        self.bar_fill_rect = pygame.Rect(self.position.x + self.bar_thickness, self.position.y + self.bar_thickness, (self.size.x * UIBar.ratio) - self.bar_thickness, self.size.y - self.bar_thickness)
+
+    def draw(self):
+        UIBar.ratio = self.current_fill / self.total_fill
+        if self.current_fill >= self.total_fill:
+            self.current_fill = self.total_fill
+            UIBar.ratio = 1
+            print("Done")
+        pygame.draw.rect(screen, self.colour, self.bar_rect, self.bar_thickness)
+        pygame.draw.rect(screen, self.fill_colour, self.bar_fill_rect)
+        show_text(self.name, (self.position.x,self.position.y - 20))
+
+class Button:
+    def __init__(self, text, position_, height_, width_, colour_):
+        self.position = pygame.Vector2(position_)
+        self.size = pygame.Vector2(width_, height_)
+        self.colour = colour_
+        self.text = text
+        self.button_rect = pygame.Rect(self.position.x, self.position.y, self.size.x, self.size.y)
+    def draw(self):
+        pygame.draw.rect(screen, self.colour, self.button_rect)
+        show_text(self.text, (self.position.x, self.position.y))
+
 
 
 # Displaying Text
@@ -158,30 +197,6 @@ def spawning_targets():
     for x in range(len(positions)):
         target(screen, positions[x], 30, "red", mouse_pos, mouse_click)
 
-class UIBar:
-    ratio = 0
-    def __init__(self, name, x, y, width, height, fill_, cfill, colour, fill_colour, bar_thickness):
-        self.name = name
-        self.position = pygame.Vector2(x, y)
-        self.size = pygame.Vector2(width, height)
-        self.total_fill = fill_
-        self.current_fill = cfill
-        self.bar_thickness = bar_thickness
-        # self.ratio = self.current_timer / self.total_timer
-        self.colour = colour
-        self.fill_colour = fill_colour
-        self.bar_rect = pygame.Rect(self.position.x, self.position.y, self.size.x + self.bar_thickness, self.size.y + self.bar_thickness)
-        self.bar_fill_rect = pygame.Rect(self.position.x + self.bar_thickness, self.position.y + self.bar_thickness, (self.size.x * UIBar.ratio) - self.bar_thickness, self.size.y - self.bar_thickness)
-
-    def draw(self):
-        UIBar.ratio = self.current_fill / self.total_fill
-        if self.current_fill >= self.total_fill:
-            self.current_fill = self.total_fill
-            UIBar.ratio = 1
-            print("Done")
-        pygame.draw.rect(screen, self.colour, self.bar_rect, self.bar_thickness)
-        pygame.draw.rect(screen, self.fill_colour, self.bar_fill_rect)
-        show_text(self.name, (self.position.x,self.position.y - 20))
 
 def render():
     screen.fill("black")
@@ -196,9 +211,11 @@ def render():
     test_text1.update()
     test_text2.update()
     test_bar.draw()
+    test_button.draw()
     # test_text2.single_text()
     pygame.draw.rect(screen, "red", test_space, 1)
-    pygame.draw.rect(screen, "blue", cursor)
+    # pygame.draw.rect(screen, "blue", cursor)
+    screen.blit(img, (mouse_pos_.x, mouse_pos_.y) )
     pygame.display.flip()
 
 
@@ -239,12 +256,12 @@ while running:
     # Single text
     # test_text = ScrollText(["Test text"], 50, (10, 200))
     # More than 1 Text
-    test_text1 = ScrollText(["MESSAGE", "MESSAGE 2"], 15, (10, 300))
+    test_text1 = ScrollText(["blahblahblahblahblahblahblah", "MESSAGE 2"], 15, (10, 300))
     test_text2 = ScrollText(["MESSAGE", "MESSAGE 2"], 15, (10, 400))
 
     test_bar = UIBar("UI Bar TEST", 10, 50, 100, 10, 10, timer,"blue", "purple", 2)
 
-
+    test_button = Button("Test BUtton", (500,100), 100, 200, "blue")
 
     # print(test_text2.counter)
     timer += dt
