@@ -1,2 +1,2 @@
 # Project-Click
-Clicky game but insane
+An Infinite target clicking game
